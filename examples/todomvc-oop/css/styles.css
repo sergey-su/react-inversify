@@ -1,0 +1,47 @@
+.todos {
+    margin: 0em auto;
+    width: 400pt;
+}
+
+.todos ul {
+    margin: 0em;
+    padding: 0em;
+}
+
+.todos li {
+    margin: 0.2em;
+    padding: 0.7em;
+    list-style-type: none;
+    border: solid 1px gray;
+}
+
+.todos li input[type="checkbox"] {
+    margin: 0em 1em;
+}
+
+.todos li input[type="text"] {
+    font: inherit;
+}
+
+.todos li a {
+    padding: 0em 0.5em;
+}
+
+.todos > input {
+    font: inherit;
+}
+
+.todos > center {
+    color: gray;
+    padding: 1em;
+}
+
+.todos > input {
+    width: 100%;
+}
+
+footer {
+    float: right;
+    padding: 0.5em;
+    font-size: 90%;
+}

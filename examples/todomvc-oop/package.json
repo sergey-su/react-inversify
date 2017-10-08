@@ -1,0 +1,30 @@
+{
+  "engines": {
+    "node": ">=5.12.0"
+  },
+  "name": "todo-oop",
+  "version": "1.0.0",
+  "description": "Todo list made with React and object-oriented model",
+  "scripts": {
+    "test": "gulp test",
+    "build": "gulp build",
+    "clean": "gulp clean"
+  },
+  "author": "sergeysu",
+  "license": "MIT",
+  "dependencies": {
+    "immutable": "^3.8.2",
+    "inversify": "^4.3.0",
+    "react": "^16.0.0",
+    "react-inversify": "../../."
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.23.0",
+    "babel-preset-stage-1": "^6.24.1",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.0",
+    "gulp": "^3.9.1",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}

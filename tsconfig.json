@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "sourceMap": true,
+        "strictNullChecks": true,        
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,            
+        "jsx": "react",
+        "target": "es3",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "lib": [
+            "es2016",
+            "dom"
+        ]
+    }    
+}   
