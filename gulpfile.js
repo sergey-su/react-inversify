@@ -1,8 +1,32 @@
 var gulp = require('gulp');
 var runSequence = require('run-sequence');
-var requireDir = require('require-dir');
-var tasks = requireDir('./build');
+var del = require('del');
+var ts = require('gulp-typescript');
 
 gulp.task('build', function(done) {
-    runSequence('package', done);
+    runSequence('build-src', 'build-dts', done);
+});
+
+var sourcesTemplate = 'src/**/*.tsx';
+var packageOutDir = 'dist';
+
+gulp.task('build-src', function() {
+    return gulp.src(sourcesTemplate)
+        .pipe(ts.createProject('tsconfig.json')())
+        .pipe(gulp.dest(packageOutDir));
+});
+
+gulp.task("build-dts", function() {
+    return gulp.src(sourcesTemplate)
+        .pipe(ts.createProject("tsconfig.json", {
+            declaration: true,
+            noResolve: false
+        })())
+        .pipe(gulp.dest(packageOutDir));
+});
+
+gulp.task("clean", function() {
+    return del([
+        packageOutDir
+    ]);
 });

@@ -7,12 +7,12 @@ export { injectable, inject, Container, decorate } from "inversify";
 
 // redux.
 // note: redux is not exposed by this module, it's implementation detail
-import { connect as reduxConnect, Provider as ReduxProvider, Store as ReduxStore, createProvider as createReduxProvider } from "react-redux";
+import { connect as reduxConnect, Provider as ReduxProvider, Store as ReduxStore, createProvider as createReduxProvider, DispatchProp, InferableComponentEnhancerWithProps } from "react-redux";
 import { createStore, Action } from "redux";
 
 import * as React from 'react';
 
-export { ChangeNotification, ChangeNotificationCallback, returntypeof, ReactDIProvider as Provider, connect };
+export { ChangeNotification, ChangeNotificationCallback, returntypeof, ReactDIProvider as Provider, ProviderProps, connect };
 
 // react-redux typings are missing this advanced function. 
 // it has to be declated manually.
@@ -92,8 +92,8 @@ function createReduxReducer(container: Container) {
  * Provides react context needed for {@see connect} function to work in children components
  */
 class ReactDIProvider extends React.Component<ProviderProps, {}> {  
-    readonly _store: ReduxStore<ReduxState>;
-    _subscribed: boolean = false;
+    private readonly _store: ReduxStore<ReduxState>;
+    private _subscribed: boolean = false;
 
     constructor(props: ProviderProps) {
         super(props);
@@ -119,7 +119,7 @@ class ReactDIProvider extends React.Component<ProviderProps, {}> {
         return <ReduxProviderWithCustomName store={this._store}>{this.props.children}</ReduxProviderWithCustomName>;
     }
 
-    handleChange() {
+    private handleChange() {
         this._store.dispatch({type: "reactDI.changeState"});
     }
 }
