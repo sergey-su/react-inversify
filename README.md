@@ -1,8 +1,8 @@
 # What's react-inversify
-react-inversify delivers objects from your inverisfy container to your React components. Additionally (and that's important part) react-inversify provides ways to map component's dependencies to its React props and to trigger re-mapping from model objects. It enables use of React on UI layer and have object-oriented decomposition on layers below. react-inversify can be with TypeScript.
+react-inversify delivers objects from your inversify container to your React components. Additionally (and that's important part) react-inversify provides ways to map component's dependencies to React props and to trigger re-mapping from model objects. It enables use of React as UI layer and have object-oriented decomposition on layers below. react-inversify can be used with TypeScript.
 
 # Installation
-npm install react-inversify --save
+``npm install react-inversify --save``
 
 # Usage
 1. In your React components
