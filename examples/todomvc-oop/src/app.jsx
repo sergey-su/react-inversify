@@ -7,11 +7,18 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 
+// manual depenedency injection for model objects
 var changeNotification = new ChangeNotification();
 var todos = new Todos(changeNotification.post);
-todos.add("asas");
+
+// use container to deliver dependencies to UI
 var container = new inversify.Container();
 container.bind(Todos.TypeTag).toConstantValue(todos);
+
+// test data
+todos.add("learn encapsulation");
+todos.add("learn React");
+todos.add("internalize SOLID");
 
 ReactDOM.render(
     <Provider container={container} changeNotification={changeNotification}>

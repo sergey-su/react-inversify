@@ -48,6 +48,8 @@ export class Todos {
         this._changeNotification();
     }
 
+    // returning reference to private collection member does not break encapsulation
+    // because the collection can not be modified
     getItems() {
         return this._items;
     }
