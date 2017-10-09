@@ -6,7 +6,7 @@ npm install react-inversify --save
 
 # Usage
 1. In your React components
-```
+```javascript
 import * as React from 'react';
 import * as inversify from 'inversify';
 import { Todos } from "./model";
@@ -44,7 +44,7 @@ export default connect(Dependencies, (deps, ownProps) => ({
 ```
 
 2. In the app's [composition root] (https://stackoverflow.com/questions/6277771/what-is-a-composition-root-in-the-context-of-dependency-injection) add ``<Provider>`` element near the root of the React tree.
-```
+```javascript
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as inversify from 'inversify';
@@ -67,7 +67,7 @@ ReactDOM.render(
 ```
 
 3. Fire change notification in model objects that hold data exposed to UI layer
-```
+```javascript
 export class Todos {
     // obtain reference to change notification function
     constructor (changeNotification) {
@@ -90,6 +90,6 @@ react-inversify connects two good ideas:
 OOD does not need advocating. It's been a default way of thinking for decades in the mainstream languages like Java, C++, C#. One of the reasons why OOD is not wide-spread in JavaScript is difficulties with integration of it with React UI framework. react-inversify offers such integration.
 
 Object-oriented application architectire might look like this
-
+![diagram](https://raw.githubusercontent.com/sergey-su/react-inversify/master/doc/react-inversify.png "OOD runtime diagram")
 
 Circles are objects. Arrows represent "uses at runtime" relation. Dotted arrows are callback. Arrows are set up by Dependency Injection, manual or automated. Arrows from views below are wired by react-inversify. The technologies of model and presentation layers are up to you. These could be plain JS classes. Presentation objects are optional. These objects are P in [MVP] (https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter) model.
