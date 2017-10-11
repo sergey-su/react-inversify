@@ -12,7 +12,7 @@ import { createStore, Action } from "redux";
 
 import * as React from 'react';
 
-export { ChangeNotification, ChangeNotificationCallback, returntypeof, ReactDIProvider as Provider, ProviderProps, connect };
+export { ChangeNotification, ChangeNotificationCallback, returntypeof, ReactDIProvider as Provider, ProviderProps, connect, createProviderClass };
 
 // react-redux typings are missing this advanced function. 
 // it has to be declated manually.
@@ -140,4 +140,14 @@ function connect<Deps, TDepsProps, TOwnProps = {}>(
         const props: TDepsProps = depsToProps(lazyDeps, ownProps);
         return props;
     }, undefined, undefined, {storeKey: storeName});
+}
+
+function createProviderClass(changeNotification: ChangeNotification, container: Container) {
+    return class extends React.Component {
+        render() {
+            return <ReactDIProvider changeNotification={changeNotification} container={container}>
+                {this.props.children}
+            </ReactDIProvider>;
+        }
+    };    
 }
