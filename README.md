@@ -34,7 +34,7 @@ class TodoItemView extends React.Component {
 // The second argument is a mapping function with two arguments:
 //   deps - instance of class Dependencies.
 //   ownProps - optional argument that holds whatever parent component passed as React properties.
-// Mapping function returns final properties TodoItemView's properties.
+// Mapping function returns final TodoItemView's properties.
 export default connect(Dependencies, (deps, ownProps) => ({
     checked: ownProps.item.isChecked(),
     text: ownProps.item.getText(),
