@@ -12,7 +12,8 @@ import { createStore, Action } from "redux";
 
 import * as React from 'react';
 
-export { ChangeNotification, ChangeNotificationCallback, returntypeof, ReactDIProvider as Provider, ProviderProps, connect, createProviderClass };
+export { ChangeNotification, ChangeNotificationCallback, returntypeof, ReactDIProvider as Provider, ProviderProps, createProviderClass, Connect };
+export const connect: Connect = connectImpl;
 
 // react-redux typings are missing this advanced function. 
 // it has to be declated manually.
@@ -124,19 +125,35 @@ class ReactDIProvider extends React.Component<ProviderProps, {}> {
     }
 }
 
-/**
- * Connects a React component to its depenencies.
- * @param depsType Type describing component's dependencies. It must be a class decorator with @injectable. The class must have conctructor with paremeters decorated by @inject.
- * @param depsToProps Function that maps component's depenencies to component's properties. This function is called each time Provider gets a change notification. Object returned by this function is shallow-compared to that returned previously. The component is re-rendered only if the comparision detects a difference.
- */
-function connect<Deps, TDepsProps, TOwnProps = {}>(
-    depsType: interfaces.Newable<Deps>, 
-    depsToProps: (deps: Deps, ownProps: TOwnProps) => TDepsProps
+interface Connect {
+    /**
+     * Connects a React component to its depenencies and to subscribes the component to change notifications.
+     * @param depsType Type describing component's dependencies. It must be a class decorator with @injectable. The class must have conctructor with paremeters decorated by @inject.
+     * @param depsToProps Function that maps component's depenencies to component's properties. This function is called each time Provider gets a change notification. Object returned by this function is shallow-compared to that returned previously. The component is re-rendered only if the comparision detects a difference.
+     */
+    <Deps, TDepsProps, TOwnProps = {}>(
+        depsType: interfaces.Newable<Deps>, 
+        depsToProps: (deps: Deps, ownProps: TOwnProps) => TDepsProps    
+    ): InferableComponentEnhancerWithProps<DispatchProp<any> & TDepsProps, TOwnProps>;
+
+    /**
+     * Subscribes the component to change notifications without resolving any dependencies. See {@see ReactDIProvider}.
+     * @param getProps Function that calculates component's properties. This function is called each time Provider gets a change notification. Object returned by this function is shallow-compared to that returned previously. The component is re-rendered only if the comparision detects a difference.
+     */
+    <TDepsProps, TOwnProps = {}>(
+        depsType: undefined,
+        getProps: (deps: undefined, ownProps: TOwnProps) => TDepsProps    
+    ): InferableComponentEnhancerWithProps<DispatchProp<any> & TDepsProps, TOwnProps>;
+}
+
+function connectImpl<Deps, TDepsProps, TOwnProps = {}>(
+    depsType: interfaces.Newable<Deps> | undefined, 
+    depsToProps: (deps: Deps | undefined, ownProps: TOwnProps) => TDepsProps
 )
 {
     let lazyDeps: Deps | undefined;
     return reduxConnect((state: ReduxState, ownProps: TOwnProps) => {
-        lazyDeps = lazyDeps || state.container.resolve(depsType);
+        lazyDeps = lazyDeps || (depsType && state.container.resolve(depsType));
         const props: TDepsProps = depsToProps(lazyDeps, ownProps);
         return props;
     }, undefined, undefined, {storeKey: storeName});
