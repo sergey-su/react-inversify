@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var runSequence = require('run-sequence');
 var del = require('del');
 var ts = require('gulp-typescript');
+var jest = require('gulp-jest').default;
 
 gulp.task('build', function(done) {
     runSequence('build-src', 'build-dts', done);
@@ -29,4 +30,15 @@ gulp.task("clean", function() {
     return del([
         packageOutDir
     ]);
+});
+
+gulp.task('jest', function () {
+  return gulp.src('tests').pipe(jest({
+    config: {
+      "preprocessorIgnorePatterns": [
+        "<rootDir>/dist/", "<rootDir>/node_modules/"
+      ],
+      "automock": false
+    }
+  }));
 });
