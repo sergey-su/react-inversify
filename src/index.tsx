@@ -149,12 +149,10 @@ interface Connect {
 function connectImpl<Deps, TDepsProps, TOwnProps = {}>(
     depsType: interfaces.Newable<Deps> | undefined, 
     depsToProps: (deps: Deps | undefined, ownProps: TOwnProps) => TDepsProps
-)
-{
-    let lazyDeps: Deps | undefined;
+) {
     return reduxConnect((state: ReduxState, ownProps: TOwnProps) => {
-        lazyDeps = lazyDeps || (depsType && state.container.resolve(depsType));
-        const props: TDepsProps = depsToProps(lazyDeps, ownProps);
+        const deps = depsType && state.container.resolve(depsType);
+        const props: TDepsProps = depsToProps(deps, ownProps);
         return props;
     }, undefined, undefined, {storeKey: storeName});
 }
@@ -166,5 +164,5 @@ function createProviderClass(changeNotification: ChangeNotification, container: 
                 {this.props.children}
             </ReactDIProvider>;
         }
-    };    
+    };
 }
