@@ -3,7 +3,7 @@
     "node": ">=5.12.0"
   },
   "name": "react-inversify",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "Dependency injection for React",
   "repository": {
     "type": "git",

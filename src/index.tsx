@@ -127,13 +127,13 @@ class ReactDIProvider extends React.Component<ProviderProps, {}> {
 
 interface Connect {
     /**
-     * Connects a React component to its depenencies and to subscribes the component to change notifications.
+     * Connects a React component to its depenencies and subscribes the component to change notifications.
      * @param depsType Type describing component's dependencies. It must be a class decorator with @injectable. The class must have conctructor with paremeters decorated by @inject.
      * @param depsToProps Function that maps component's depenencies to component's properties. This function is called each time Provider gets a change notification. Object returned by this function is shallow-compared to that returned previously. The component is re-rendered only if the comparision detects a difference.
      */
     <Deps, TDepsProps, TOwnProps = {}>(
         depsType: interfaces.Newable<Deps>, 
-        depsToProps: (deps: Deps, ownProps: TOwnProps) => TDepsProps    
+        depsToProps: (deps: Deps, ownProps: TOwnProps) => TDepsProps
     ): InferableComponentEnhancerWithProps<DispatchProp<any> & TDepsProps, TOwnProps>;
 
     /**
@@ -142,19 +142,41 @@ interface Connect {
      */
     <TDepsProps, TOwnProps = {}>(
         depsType: undefined,
-        getProps: (deps: undefined, ownProps: TOwnProps) => TDepsProps    
+        getProps: (deps: undefined, ownProps: TOwnProps) => TDepsProps
     ): InferableComponentEnhancerWithProps<DispatchProp<any> & TDepsProps, TOwnProps>;
+
+    /**
+     * Connects a React component to its depenencies and subscribes the component to change notifications.
+      * @param depsType Type describing component's dependencies and properties. It must be a class decorator with @injectable. The class must have conctructor with paremeters decorated by @inject.
+     */
+    <Deps, TOwnProps = {}>(
+        depsType: interfaces.Newable<Deps>,
+        depsToProps?: never
+    ): InferableComponentEnhancerWithProps<DispatchProp<any> & Deps, TOwnProps>;
 }
 
 function connectImpl<Deps, TDepsProps, TOwnProps = {}>(
     depsType: interfaces.Newable<Deps> | undefined, 
-    depsToProps: (deps: Deps | undefined, ownProps: TOwnProps) => TDepsProps
-) {
-    return reduxConnect((state: ReduxState, ownProps: TOwnProps) => {
-        const deps = depsType && state.container.resolve(depsType);
-        const props: TDepsProps = depsToProps(deps, ownProps);
-        return props;
-    }, undefined, undefined, {storeKey: storeName});
+    depsToProps: ((deps: Deps | undefined, ownProps: TOwnProps) => TDepsProps) | undefined
+): InferableComponentEnhancerWithProps<DispatchProp<any> & TDepsProps, TOwnProps> |
+   InferableComponentEnhancerWithProps<DispatchProp<any> & Deps, TOwnProps>
+{
+    if (typeof depsToProps === 'function') {
+        return reduxConnect((state: ReduxState, ownProps: TOwnProps) => {
+            const deps = depsType && state.container.resolve(depsType);
+            const props: TDepsProps = depsToProps(deps, ownProps);
+            return props;
+        }, undefined, undefined, {storeKey: storeName});
+    }
+    else {
+        if (!depsType)
+            throw new Error('depsType is not specified');
+        return reduxConnect((state: ReduxState, ownProps: TOwnProps) => {
+            const deps = state.container.resolve(depsType);
+            const props = Object.assign({}, ownProps, deps);
+            return props;
+        }, undefined, undefined, {storeKey: storeName});
+    }
 }
 
 function createProviderClass(changeNotification: ChangeNotification, container: Container) {
