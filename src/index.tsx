@@ -33,7 +33,7 @@ class ChangeNotification {
     constructor() {
         this.post = this.post.bind(this);
         this.subscribe = this.subscribe.bind(this);
-        this.unsubsribe = this.unsubsribe.bind(this);
+        this.unsubscribe = this.unsubscribe.bind(this);
     }
 
     post(): void {
@@ -47,7 +47,7 @@ class ChangeNotification {
         this._callbacks.add(fn);
     }
 
-    unsubsribe(fn: ChangeNotificationCallback): void {
+    unsubscribe(fn: ChangeNotificationCallback): void {
         this._callbacks.delete(fn);
     }
 
@@ -111,7 +111,7 @@ class ReactDIProvider extends React.Component<ProviderProps, {}> {
 
     componentWillUnmount(): void {
         if (this._subscribed && this.props.changeNotification)  {
-            this.props.changeNotification.unsubsribe(this.handleChange);
+            this.props.changeNotification.unsubscribe(this.handleChange);
             this._subscribed = false;
         }
     }
