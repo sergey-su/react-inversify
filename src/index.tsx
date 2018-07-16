@@ -36,8 +36,10 @@ class ChangeNotification {
         this.unsubscribe = this.unsubscribe.bind(this);
     }
 
-    post(): void {
-        if (!this._posted) {
+    post(immediately = false): void {
+        if (immediately) {
+            this._notifyAll();
+        } else if (!this._posted) {
             this._posted = true;
             setTimeout(this._notifyAll.bind(this), 0);
         }
